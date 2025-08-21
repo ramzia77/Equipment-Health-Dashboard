@@ -1,8 +1,7 @@
 # ⚙️ Equipment Health Tracker
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/yourrepo?style=social)](https://github.com/yourusername/yourrepo/stargazers)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Issues](https://img.shields.io/github/issues/yourusername/yourrepo)](https://github.com/yourusername/yourrepo/issues)
+[![GitHub stars](https://img.shields.io/github/stars/yourusername/yourrepo?style=social)][(https://github.com/ramzia77))]
+
 [![Maintenance](https://img.shields.io/badge/Maintained-Yes-green)](https://github.com/yourusername/yourrepo)
 
 > 🔥 Real-time construction equipment monitoring with simulated IoT data, alerts, and live dashboard. Fully IoT-ready and ERP/CMMS integration capable.
