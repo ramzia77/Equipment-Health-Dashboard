@@ -1,12 +1,54 @@
-# React + Vite
+# ⚙️ Equipment Health Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![GitHub stars](https://img.shields.io/github/stars/yourusername/yourrepo?style=social)](https://github.com/yourusername/yourrepo/stargazers)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Issues](https://img.shields.io/github/issues/yourusername/yourrepo)](https://github.com/yourusername/yourrepo/issues)
+[![Maintenance](https://img.shields.io/badge/Maintained-Yes-green)](https://github.com/yourusername/yourrepo)
 
-Currently, two official plugins are available:
+> 🔥 Real-time construction equipment monitoring with simulated IoT data, alerts, and live dashboard. Fully IoT-ready and ERP/CMMS integration capable.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Project Overview  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Welcome to **Equipment Health Tracker** – the future of **smart construction equipment monitoring**!  
+
+- Monitors **temperature 🌡️**, **battery ⚡**, and **vibration 🌀**.  
+- Simulated data shows live alerts and trends.  
+- Fully React + Firebase dashboard for real-time visualization.  
+- Alert delivery via **Email 📧**, **Slack 💬**, and **Trello 📋**.
+
+![Dashboard GIF](https://media.giphy.com/media/yourdemo.gif)
+
+---
+
+## 🎯 Business Value  
+
+- **Preventive maintenance** → reduce downtime  
+- **Safety enhancement** → detect anomalies early  
+- **Operational efficiency** → optimize equipment usage  
+- **ERP/CMMS Integration-ready** → seamless workflow sync  
+
+---
+
+## ✨ Features  
+
+- **🚀 Real-time Monitoring:** Live React dashboard via Firebase  
+- **⚡ Alerts System:** Email, Slack, Trello notifications  
+- **📊 Trends Visualization:** Line charts for temperature, battery, vibration  
+- **🖥 Simulated IoT Devices:** Python simulator (`equipment-health-simulator.py`)  
+- **💾 Data Storage:** Firebase for persistent real-time data  
+- **🛠 Tooling:** TailwindCSS, Vite, ESLint, PostCSS  
+
+---
+
+## 🏗 Architecture  
+
+```mermaid
+graph LR
+A[Simulated Devices] --> B[Python Simulator]
+B --> C[n8n Webhook Workflow]
+C --> D[Alert Delivery]
+C --> E[Firebase]
+E --> F[React Dashboard]
+D --> G[Email / Slack / Trello]
