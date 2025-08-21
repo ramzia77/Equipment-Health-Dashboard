@@ -1,6 +1,6 @@
 # ⚙️ Equipment Health Tracker
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/yourrepo?style=social)][(https://github.com/ramzia77))]
+[![GitHub stars](https://img.shields.io/github/stars/ramzia77/yourrepo?style=social)](https://github.com/ramzia77/yourrepo)
 
 [![Maintenance](https://img.shields.io/badge/Maintained-Yes-green)](https://github.com/yourusername/yourrepo)
 
