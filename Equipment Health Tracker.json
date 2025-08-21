@@ -1,0 +1,438 @@
+{
+  "name": "Equipment Health Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tracker",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        -260
+      ],
+      "id": "58b45a64-2dab-4729-a918-ed630508e169",
+      "name": "Webhook",
+      "webhookId": "284b8722-499d-4155-9f69-8931977b0960"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript mode)\n\nconst data = $input.item.json.body;\n\nlet status = \"Healthy\";\nlet reason = [];\n\nif (data.temperature > 70) {\n  status = \"Alert\";\n  reason.push(\"High Temperature\");\n}\n\nif (data.vibration > 60) {\n  status = \"Alert\";\n  reason.push(\"High Vibration\");\n}\n\nif (data.battery < 25) {\n  status = \"Alert\";\n  reason.push(\"Low Battery\");\n}\n\nreturn {\n  json: {\n    ...data,\n    status,\n    reason: reason.join(', '),\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        -280
+      ],
+      "id": "70fc5ba4-fea2-46d2-bc03-3ed7165587db",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "08d8fb9b-b489-4691-b65c-9b6c871909b2",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "Alert",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -200,
+        -340
+      ],
+      "id": "c81020b7-95b5-411a-a75e-4ba6cdec5fab",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "sithyramzia@gmail.com",
+        "subject": "⚠️ Critical Machinery Alert",
+        "message": "=<div style=\"font-family: Arial, sans-serif; background-color: #fff; padding: 20px; max-width: 650px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);\">      <div style=\"background-color: #d9534f; color: white; padding: 12px 20px; border-radius: 6px 6px 0 0;\">     <h2 style=\"margin: 0; font-size: 22px;\">⚠️ Critical Machinery Alert</h2>   </div>    <div style=\"padding: 20px; background-color: #fdfdfd;\">     <p style=\"font-size: 16px; margin: 0 0 10px 0;\"><strong>🆔 Device:</strong> {{ $json.device_id }}</p>     <p style=\"font-size: 16px; margin: 0 0 10px 0;\"><strong>📍 Location:</strong> {{ $json.location }}</p>     <p style=\"font-size: 16px; margin: 0 0 10px 0;\"><strong>📅 Timestamp:</strong> {{ $json.timestamp }}</p>     <p style=\"font-size: 16px; margin: 0 0 10px 0; color: #d9534f;\"><strong>🚨 Status:</strong> {{ $json.status }}</p>     <p style=\"font-size: 16px; margin: 0 0 20px 0; color: #d9534f;\"><strong>❗ Reason(s):</strong> {{ $json.reason }}</p>      <table style=\"width: 100%; border-collapse: collapse; font-size: 15px;\">       <thead>         <tr style=\"background-color: #f2f2f2;\">           <th style=\"border: 1px solid #ddd; padding: 10px; text-align: left;\">Parameter</th>           <th style=\"border: 1px solid #ddd; padding: 10px; text-align: left;\">Value</th>         </tr>       </thead>       <tbody>         <tr>           <td style=\"border: 1px solid #ddd; padding: 10px;\">🌡️ Temperature</td>           <td style=\"border: 1px solid #ddd; padding: 10px;\">{{ $json.temperature }} °C</td>         </tr>         <tr>           <td style=\"border: 1px solid #ddd; padding: 10px;\">🌀 Vibration</td>           <td style=\"border: 1px solid #ddd; padding: 10px;\">{{ $json.vibration }} Hz</td>         </tr>         <tr>           <td style=\"border: 1px solid #ddd; padding: 10px;\">🔋 Battery</td>           <td style=\"border: 1px solid #ddd; padding: 10px;\">{{ $json.battery }}%</td>         </tr>       </tbody>     </table>   </div>    <div style=\"background-color: #f8f9fa; padding: 12px 20px; border-radius: 0 0 6px 6px; text-align: center; font-size: 14px; color: #888;\">     ⚠️ Please take immediate action. This is an automated alert from your site monitoring system.   </div>  </div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        180,
+        -640
+      ],
+      "id": "f3bd1119-fa6d-473c-a244-0bcb55209433",
+      "name": "Send a message",
+      "webhookId": "2274b298-f606-4b8b-af8b-7dd5f4307c7d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "z4FVgrhmkziR6Wv9",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "15_9zE49can6Vwt1GsSglZ2X7n9h7NUQbBf-IYRry_aY",
+          "mode": "list",
+          "cachedResultName": "Equipment Health Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15_9zE49can6Vwt1GsSglZ2X7n9h7NUQbBf-IYRry_aY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15_9zE49can6Vwt1GsSglZ2X7n9h7NUQbBf-IYRry_aY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "device_id": "={{ $json.device_id }}",
+            "temperature": "={{ $json.temperature }}",
+            "vibration": "={{ $json.vibration }}",
+            "battery": "={{ $json.battery }}",
+            "location": "={{ $json.location }}",
+            "timestamp": "={{ $json.timestamp }}",
+            "status": "={{ $json.status }}",
+            "reason": "={{ $json.reason }}"
+          },
+          "matchingColumns": [
+            "device_id"
+          ],
+          "schema": [
+            {
+              "id": "device_id",
+              "displayName": "device_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "temperature",
+              "displayName": "temperature",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vibration",
+              "displayName": "vibration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "battery",
+              "displayName": "battery",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        460,
+        -620
+      ],
+      "id": "7ede9084-ad86-4b87-b92b-4ac02ae763bd",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pt9O1tcxgS3RdYcM",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0961791873",
+          "mode": "list",
+          "cachedResultName": "all-equipment-health-tracker"
+        },
+        "messageType": "block",
+        "blocksUi": "=[\n  {\n    \"type\": \"header\",\n    \"text\": {\n      \"type\": \"plain_text\",\n      \"text\": \"🚨 DEVICE ALERT: {{ $json.device_id }}\",\n      \"emoji\": true\n    }\n  },\n  {\n    \"type\": \"section\",\n    \"fields\": [\n      {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Status:*\\n{{ $json.status }}\"\n      },\n      {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Reason(s):*\\n{{ $json.reason }}\"\n      },\n      {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Location:*\\n{{ $json.location }}\"\n      },\n      {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Timestamp:*\\n{{ $json.timestamp }}\"\n      }\n    ]\n  },\n  {\n    \"type\": \"divider\"\n  },\n  {\n    \"type\": \"section\",\n    \"text\": {\n      \"type\": \"mrkdwn\",\n      \"text\": \"*🔧 Sensor Readings:*\"\n    }\n  },\n  {\n    \"type\": \"context\",\n    \"elements\": [\n      {\n        \"type\": \"mrkdwn\",\n        \"text\": \"🌡️ *Temperature:* {{ $json.temperature }} °C\"\n      },\n      {\n        \"type\": \"mrkdwn\",\n        \"text\": \"🌀 *Vibration:* {{ $json.vibration }} Hz\"\n      },\n      {\n        \"type\": \"mrkdwn\",\n        \"text\": \"🔋 *Battery:* {{ $json.battery }}%\"\n      }\n    ]\n  },\n  {\n    \"type\": \"divider\"\n  },\n  {\n    \"type\": \"context\",\n    \"elements\": [\n      {\n        \"type\": \"plain_text\",\n        \"text\": \"⚠️ Please inspect the machinery immediately. – Site Monitoring System\",\n        \"emoji\": true\n      }\n    ]\n  }\n]\n",
+        "text": "=🚨 {{ $json.device_id }} is in ALERT status due to: {{ $json.reason }} at {{ $json.location }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        560,
+        -400
+      ],
+      "id": "378fff0d-fd02-43af-b7f7-3edb60eded1d",
+      "name": "Send a message1",
+      "webhookId": "6fe63894-1cf3-4258-b4e5-0d31dabca048",
+      "credentials": {
+        "slackApi": {
+          "id": "AdpClXJoonFwrFPx",
+          "name": "acess equip"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "listId": "68749e9d5a54acbdd01b8c7b",
+        "name": "=🚧 Alert: {{ $json.device_id }} – {{ $json.status }}",
+        "description": "=🆔 *Device ID:* {{ $json.device_id }} \n📍 *Location:* {{ $json.location }} \n📅 *Timestamp:* {{ $json.timestamp }}  \n⚠️ *Status:* {{ $json.status }} \n❗ *Reason(s):* {{ $json.reason }}  \n\n🔧 *Sensor Readings:* \n\n• 🌡️ Temperature: {{ $json.temperature }} °C   \n• 🌀 Vibration: {{ $json.vibration }} Hz  \n• 🔋 Battery: {{ $json.battery }} %  \n\n🔍 *Action Required:* Please investigate and resolve the issue at the site as soon as possible.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.trello",
+      "typeVersion": 1,
+      "position": [
+        680,
+        -260
+      ],
+      "id": "b0ff7ff5-6dcb-4dbc-85b6-4fff29867198",
+      "name": "Create a card",
+      "credentials": {
+        "trelloApi": {
+          "id": "37DCE6dJxilIXVXL",
+          "name": "Trello account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://firestore.googleapis.com/v1/projects/equipment-health-tracker/databases/(default)/documents/alerts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer ya29.c.c0ASRK0GZZ9oKXmqnwuIpycu8EGjlmI2Y0cwIIPM2INNZ4h4nGqnLKtoAgb5b3PUkwtFlThaAzfCHpcTOAbC3JG07soxT8hyu8BpydoWS_4HFgeDMrYvhTiLDeSoau7lq9_6BfdlUCqZJZiDR7VtN4c0WtVzAZOPZYMmo0xesozjc_YFWvW1cjVOZJ4SIwoBtyJ3Qn6IFKzPA65TzkQXo6QP6jiBNaYFofZFojXP4ot77IkRsRvpS_qfShd-vhpLFPF_mpOoni4R0dIwOZAaa0bAvN-T5blDZm_01C2gG-W07SbhhopJMmnbXV9n2eO1jQNUexghV7zU5zXZrtLXj9kfUx1DpGczwERtCUO2b7mGZSKJVrOy41BI67T385KpdJXxdJU0zJ5omodxw5m3JOvWa_2FUnZSMpFc6rwQ93uMnuZk4kIsx8zzkaV0SuSfWI7uq5clxynn8g-kj8JQJgyhzFwg5yh0sQUZj1XBfVpydyycksefv_muYBvaMl1f8JxUc-mMZzISsml-vQY80rImqOYSkuIZXfoMgJeYxtb9uoYVZlOyaqBlkVhf9Yzdj63i7hk2vI8br_UijguJySgeZU6af47ajyica_Ms7ooFeh0nspwQ0uem04vR4rj_wJyX2xWJzuXopQ4ZgS9rqU6JqpwvoSfdm3-tSpqyeXx6JquySeSoB-ofpen-3Y5m6VMsS7-n9OepQ3yIkF8Rmo9oXzB6qSzoQBJbzc0-gav6OiqFZjrm7uyz3tW0rM8s_e-WBMV2X4ZBncVzq8pWvd25zeW1Wj7UyMa5pRdSvnnRl1UXzSf0mJv48t3r3gqYri4VZWtr-luFJiW8J_vUrn2MggUmhFc9RploxcIzF_cnobdxX2Q1zQz1BMiowB7l2QksI5zSbfWYBplS0QpiUfFWS1FqRf1o7rO688-_RS53rwwqgfdU0l6Wj8RdRRu9UXI1Q5gpZ9jfr7YnI1JMnstsqBdhMMxlQMzwYQiaVWIpvjMYg3tz6p8mQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"device_id\": { \"stringValue\": \"{{$json.device_id}}\" },\n    \"temperature\": { \"doubleValue\": {{$json.temperature}} },\n    \"vibration\": { \"doubleValue\": {{$json.vibration}} },\n    \"battery\": { \"doubleValue\": {{$json.battery}} },\n    \"status\": { \"stringValue\": \"{{$json.status}}\" },\n    \"reason\": { \"stringValue\": \"{{$json.reason}}\" },\n    \"location\": { \"stringValue\": \"{{$json.location}}\" },\n    \"timestamp\": { \"timestampValue\": \"{{ DateTime.fromFormat($json.timestamp, 'yyyy-MM-dd HH:mm:ss').toUTC().toISO() }}\" }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        -80
+      ],
+      "id": "a801e224-4470-4ac0-9e6c-c865b728cbf0",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://firestore.googleapis.com/v1/projects/equipment-health-tracker/databases/(default)/documents/normal",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer ya29.c.c0ASRK0GZZ9oKXmqnwuIpycu8EGjlmI2Y0cwIIPM2INNZ4h4nGqnLKtoAgb5b3PUkwtFlThaAzfCHpcTOAbC3JG07soxT8hyu8BpydoWS_4HFgeDMrYvhTiLDeSoau7lq9_6BfdlUCqZJZiDR7VtN4c0WtVzAZOPZYMmo0xesozjc_YFWvW1cjVOZJ4SIwoBtyJ3Qn6IFKzPA65TzkQXo6QP6jiBNaYFofZFojXP4ot77IkRsRvpS_qfShd-vhpLFPF_mpOoni4R0dIwOZAaa0bAvN-T5blDZm_01C2gG-W07SbhhopJMmnbXV9n2eO1jQNUexghV7zU5zXZrtLXj9kfUx1DpGczwERtCUO2b7mGZSKJVrOy41BI67T385KpdJXxdJU0zJ5omodxw5m3JOvWa_2FUnZSMpFc6rwQ93uMnuZk4kIsx8zzkaV0SuSfWI7uq5clxynn8g-kj8JQJgyhzFwg5yh0sQUZj1XBfVpydyycksefv_muYBvaMl1f8JxUc-mMZzISsml-vQY80rImqOYSkuIZXfoMgJeYxtb9uoYVZlOyaqBlkVhf9Yzdj63i7hk2vI8br_UijguJySgeZU6af47ajyica_Ms7ooFeh0nspwQ0uem04vR4rj_wJyX2xWJzuXopQ4ZgS9rqU6JqpwvoSfdm3-tSpqyeXx6JquySeSoB-ofpen-3Y5m6VMsS7-n9OepQ3yIkF8Rmo9oXzB6qSzoQBJbzc0-gav6OiqFZjrm7uyz3tW0rM8s_e-WBMV2X4ZBncVzq8pWvd25zeW1Wj7UyMa5pRdSvnnRl1UXzSf0mJv48t3r3gqYri4VZWtr-luFJiW8J_vUrn2MggUmhFc9RploxcIzF_cnobdxX2Q1zQz1BMiowB7l2QksI5zSbfWYBplS0QpiUfFWS1FqRf1o7rO688-_RS53rwwqgfdU0l6Wj8RdRRu9UXI1Q5gpZ9jfr7YnI1JMnstsqBdhMMxlQMzwYQiaVWIpvjMYg3tz6p8mQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=\n{\n  \"fields\": {\n    \"device_id\": { \"stringValue\": \"{{$json.device_id}}\" },\n    \"temperature\": { \"doubleValue\": {{$json.temperature}} },\n    \"vibration\": { \"doubleValue\": {{$json.vibration}} },\n    \"battery\": { \"doubleValue\": {{$json.battery}} },\n    \"status\": { \"stringValue\": \"{{$json.status}}\" },\n    \"reason\": { \"stringValue\": \"{{$json.reason}}\" },\n    \"location\": { \"stringValue\": \"{{$json.location}}\" },\n    \"timestamp\": { \"timestampValue\": \"{{ DateTime.fromFormat($json.timestamp, 'yyyy-MM-dd HH:mm:ss').toUTC().toISO() }}\" }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        160
+      ],
+      "id": "9b4111f4-c6f5-4cee-91bc-c7e1bf5f2b6f",
+      "name": "HTTP Request1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "e32295cf6a2f.ngrok-free.app",
+            "user-agent": "python-requests/2.32.3",
+            "content-length": "161",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate",
+            "content-type": "application/json",
+            "x-forwarded-for": "2.51.159.78",
+            "x-forwarded-host": "e32295cf6a2f.ngrok-free.app",
+            "x-forwarded-proto": "https"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "device_id": "CEM-03",
+            "temperature": 58.98,
+            "vibration": 23.38,
+            "battery": 49.1,
+            "location": "Site C – Concrete Zone",
+            "timestamp": "2025-07-15 12:42:08"
+          },
+          "webhookUrl": "https://e32295cf6a2f.ngrok-free.app/webhook-test/tracker",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a card",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "51183de7-3ea5-4e39-8cd4-827ef709197f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aad7199269b3abc585e25c1186d1e9fa8a4abb1fe9b9e74b5a4a17dc217df9c5"
+  },
+  "id": "cJvUgNq8uX8FIweY",
+  "tags": []
+}
